@@ -55,8 +55,8 @@ def authenticate_drive():
         tmp_file.flush()
         creds = InstalledAppFlow.from_client_secrets_file(tmp_file.name, SCOPES)
     return build('drive', 'v3', credentials=creds)
-            creds = flow.run_console()
-        with open('token.pickle', 'wb') as token:
+        creds = flow.run_console()
+    with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
     return build('drive', 'v3', credentials=creds)
 
