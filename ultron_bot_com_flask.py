@@ -41,7 +41,20 @@ def authenticate_drive():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+           import os
+import json
+from google.oauth2.service_account import Credentials
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+import tempfile
+
+def authenticate_drive():
+    creds_json = os.environ.get('GOOGLE_CREDENTIALS')
+    with tempfile.NamedTemporaryFile(mode="w+", delete=False, suffix=".json") as tmp_file:
+        tmp_file.write(creds_json)
+        tmp_file.flush()
+        creds = InstalledAppFlow.from_client_secrets_file(tmp_file.name, SCOPES)
+    return build('drive', 'v3', credentials=creds)
             creds = flow.run_local_server(port=0)
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
